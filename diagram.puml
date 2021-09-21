@@ -1,0 +1,62 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+component Application {
+    package com.clinicaOdontologica{
+
+
+        package service {
+
+            interface IService {
+                + buscar(Integer id) : T
+                + crear(T t) : T
+                + actualizar(T t) : T
+                + consultarTodos() : List<T>
+                + eliminar(Integer id) : void
+            }
+            package impl{
+            class PacienteServiceImpl implements IService
+            class DomicilioServiceImpl implements IService
+            class OdontologoServiceImpl implements IService
+
+
+            }
+        }
+
+        package controller {
+            class PacienteController
+            class OdontologoController
+        }
+
+        package dto{
+            class DomicilioDTO
+            class OdontologoDTO
+            class PacienteDTO
+        }
+
+        package entities{
+            package repositories {
+
+                interface OdontologoRepository extends JpaRepository
+                interface PacienteRepository extends JpaRepository
+                interface DomicilioRepository extends JpaRepository
+            }
+
+            package model {
+                class Odontologo
+                class Paciente
+                class Domicilio
+                class Turno
+            }
+        }
+        controller *-- service
+        repositories .> model : crea/usa
+        dto .> entities
+
+
+
+    }
+
+
+
+@enduml
