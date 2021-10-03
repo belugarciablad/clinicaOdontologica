@@ -1,7 +1,8 @@
 package com.proyectointegrador.clinicaOdontologica.controller;
 
-import com.proyectointegrador.clinicaOdontologica.dto.OdontologoDTO;
 import com.proyectointegrador.clinicaOdontologica.dto.PacienteDTO;
+import com.proyectointegrador.clinicaOdontologica.exceptions.BadRequestException;
+import com.proyectointegrador.clinicaOdontologica.exceptions.ResourceNotFoundException;
 import com.proyectointegrador.clinicaOdontologica.service.impl.PacienteServiceImpl;
 import org.apache.log4j.Logger;
 import org.apache.tomcat.jni.Local;
@@ -29,7 +30,7 @@ public class PacienteController {
     }
 
     @GetMapping("/buscar/{id}")
-    public ResponseEntity<PacienteDTO> buscarPorId(@PathVariable Integer id){
+    public ResponseEntity<PacienteDTO> buscarPorId(@PathVariable Integer id) throws ResourceNotFoundException {
         ResponseEntity<PacienteDTO> response = null;
         log.debug("Buscando al paciente con id: " + id);
         if(pacienteService.buscarPorID(id) !=null){
@@ -48,22 +49,21 @@ public class PacienteController {
         return ResponseEntity.ok(pacienteService.buscarTodos());
     }
     @PutMapping("/actualizar")
-    public ResponseEntity<PacienteDTO> actualizar(@RequestBody PacienteDTO p){
+    public ResponseEntity<PacienteDTO> actualizar(@RequestBody PacienteDTO p) throws BadRequestException, ResourceNotFoundException {
         log.debug("Actualizando al paciente con id:"+ p.getId());
         ResponseEntity<PacienteDTO> response = null;
-        if(pacienteService.actualizar(p)!= null){
-            p.setFechaIngreso(LocalDate.now());
-            response = ResponseEntity.ok(pacienteService.actualizar(p));
-            log.info("Paciente con id: " + p.getId() + "actualizado.");
-        }else{
+        if(pacienteService.actualizar(p)== null){
             response = ResponseEntity.notFound().build();
             log.info("No se encontró al paciente con id: " + p.getId());
+        }else{
+            p.setFechaIngreso(LocalDate.now());
+            response = ResponseEntity.ok(pacienteService.buscarPorID(p.getId()));
         }
         return response;
     }
 
     @DeleteMapping("eliminar/{id}")
-    public ResponseEntity<String> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<String> eliminar(@PathVariable Integer id) throws ResourceNotFoundException {
 
         log.debug("Eliminando al paciente con id:"+ id);ResponseEntity<String> response;
 

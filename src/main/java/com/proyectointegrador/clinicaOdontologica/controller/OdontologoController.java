@@ -1,6 +1,8 @@
 package com.proyectointegrador.clinicaOdontologica.controller;
 
 import com.proyectointegrador.clinicaOdontologica.dto.OdontologoDTO;
+import com.proyectointegrador.clinicaOdontologica.exceptions.BadRequestException;
+import com.proyectointegrador.clinicaOdontologica.exceptions.ResourceNotFoundException;
 import com.proyectointegrador.clinicaOdontologica.service.impl.OdontologoServiceImpl;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ public class OdontologoController {
     }
 
     @GetMapping("/buscar/{id}")
-    public ResponseEntity<OdontologoDTO> buscarPorId(@PathVariable Integer id){
+    public ResponseEntity<OdontologoDTO> buscarPorId(@PathVariable Integer id) throws ResourceNotFoundException {
         log.debug("Buscando al odontólogo con id: " + id);
         ResponseEntity<OdontologoDTO> response = null;
 
@@ -44,21 +46,20 @@ public class OdontologoController {
         return ResponseEntity.ok(odontologoService.buscarTodos());
     }
     @PutMapping("/actualizar")
-    public ResponseEntity<OdontologoDTO> actualizar(@RequestBody OdontologoDTO o){
+    public ResponseEntity<OdontologoDTO> actualizar(@RequestBody OdontologoDTO o) throws ResourceNotFoundException, BadRequestException {
         log.debug("Actualizando al odontólogo con id:"+ o.getId());
         ResponseEntity<OdontologoDTO> response = null;
-        if(odontologoService.actualizar(o)!= null){
-            response = ResponseEntity.ok(odontologoService.actualizar(o));
-            log.info("Odontologo con id: " + o.getId() + "actualizado.");
-        }else{
+        if(odontologoService.actualizar(o)== null){
             response = ResponseEntity.notFound().build();
             log.info("No se encontró al odontólogo con id: " + o.getId());
+        }else{
+            response = ResponseEntity.ok(odontologoService.buscarPorID(o.getId()));
         }
         return response;
     }
 
     @DeleteMapping("eliminar/{id}")
-    public ResponseEntity<String> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<String> eliminar(@PathVariable Integer id) throws ResourceNotFoundException {
         log.debug("Eliminando al odontólogo con id:"+ id);
         ResponseEntity<String> response;
 

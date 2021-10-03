@@ -22,9 +22,6 @@ public class Domicilio {
     private String localidad;
     private String provincia;
 
-    @OneToMany(mappedBy = "domicilio")
-    private Set<Paciente> pacientes;
-
     public Domicilio() { }
 
     public Domicilio(Integer id, String calle, String numero, String localidad, String provincia) {

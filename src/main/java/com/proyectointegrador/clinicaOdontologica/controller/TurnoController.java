@@ -28,7 +28,7 @@ public class TurnoController {
     }
 
     @GetMapping("/buscar/{id}")
-    public ResponseEntity<TurnoDTO> buscarPorId(@PathVariable Integer id){
+    public ResponseEntity<TurnoDTO> buscarPorId(@PathVariable Integer id) throws BadRequestException, ResourceNotFoundException {
         ResponseEntity<TurnoDTO> response = null;
         log.debug("Buscando al Turno con id: " + id);
         if(turnoService.buscarPorID(id) !=null){
@@ -47,21 +47,20 @@ public class TurnoController {
         return ResponseEntity.ok(turnoService.buscarTodos());
     }
     @PutMapping("/actualizar")
-    public ResponseEntity<TurnoDTO> actualizar(@RequestBody TurnoDTO t){
+    public ResponseEntity<?> actualizar(@RequestBody TurnoDTO t) throws BadRequestException, ResourceNotFoundException {
         log.debug("Actualizando al Turno con id:"+ t.getId());
-        ResponseEntity<TurnoDTO> response = null;
-        if(turnoService.actualizar(t)!= null){
-            response = ResponseEntity.ok(turnoService.actualizar(t));
-            log.info("Turno con id: " + t.getId() + "actualizado.");
-        }else{
+        ResponseEntity<?> response = null;
+        if(turnoService.actualizar(t) == null){
             response = ResponseEntity.notFound().build();
             log.info("No se encontró al Turno con id: " + t.getId());
+        }else{
+            response = ResponseEntity.ok(turnoService.buscarPorID(t.getId()));
         }
         return response;
     }
 
     @DeleteMapping("eliminar/{id}")
-    public ResponseEntity<String> eliminar(@PathVariable Integer id) {
+    public ResponseEntity<String> eliminar(@PathVariable Integer id) throws BadRequestException, ResourceNotFoundException {
 
         log.debug("Eliminando al Turno con id:"+ id);ResponseEntity<String> response;
 
@@ -74,5 +73,10 @@ public class TurnoController {
             log.info("Turno con id: " + id+ " eliminado");
         }
         return response;
+    }
+
+    @GetMapping("proximaSemana")
+    public ResponseEntity<?> buscarTurnosProximaSemana() throws ResourceNotFoundException {
+        return  ResponseEntity.ok(turnoService.turnosProxSemana());
     }
 }

@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -20,11 +19,11 @@ public class Turno {
     private LocalDateTime fechaTurno;
 
     @Setter
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     @JoinColumn(name ="paciente_id", nullable = false)
     private Paciente paciente;
     @Setter
-    @ManyToOne(cascade = CascadeType.ALL, optional = false)
+    @ManyToOne(cascade = CascadeType.MERGE, optional = false)
     @JoinColumn(name ="odontologo_id", nullable = false)
     private Odontologo odontologo;
 

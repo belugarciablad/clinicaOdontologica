@@ -1,9 +1,11 @@
 package com.proyectointegrador.clinicaOdontologica.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.proyectointegrador.clinicaOdontologica.persistence.entities.Domicilio;
 
 import java.io.Serializable;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DomicilioDTO implements Serializable {
 
     private Integer id;

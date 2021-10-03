@@ -1,10 +1,14 @@
 package com.proyectointegrador.clinicaOdontologica.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,9 +26,13 @@ public class Paciente {
     private LocalDate fechaIngreso;
 
     @Setter
-    @ManyToOne(cascade = CascadeType.ALL, optional = false) //optional en false para que un paciente tenga siempre domicilio
+    @OneToOne(cascade = CascadeType.ALL, optional = false) //optional en false para que un paciente tenga siempre domicilio
     @JoinColumn(name ="domicilio_id", nullable = false)
     private Domicilio domicilio;
+
+    @OneToMany(mappedBy = "paciente")
+    @JsonIgnore
+    private Set<Turno> turnos = new HashSet<>();
 
 
     public Paciente() {

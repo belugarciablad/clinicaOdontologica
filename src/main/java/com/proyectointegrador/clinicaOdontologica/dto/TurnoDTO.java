@@ -1,14 +1,13 @@
 package com.proyectointegrador.clinicaOdontologica.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.proyectointegrador.clinicaOdontologica.persistence.entities.Odontologo;
-import com.proyectointegrador.clinicaOdontologica.persistence.entities.Paciente;
 import com.proyectointegrador.clinicaOdontologica.persistence.entities.Turno;
+import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TurnoDTO implements Serializable {
 
@@ -25,7 +24,6 @@ public class TurnoDTO implements Serializable {
         this.fechaTurno = t.getFechaTurno();
         this.paciente = new PacienteDTO(t.getPaciente());
         this.odontologo = new OdontologoDTO(t.getOdontologo());
-
     }
 
     public Turno toEntity(){

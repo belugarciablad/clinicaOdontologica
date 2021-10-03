@@ -1,9 +1,12 @@
 package com.proyectointegrador.clinicaOdontologica.persistence.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -19,6 +22,10 @@ public class Odontologo {
     private String nombre;
     private String apellido;
     private String matricula;
+
+    @OneToMany(mappedBy = "odontologo")
+    @JsonIgnore
+    private Set<Turno> turnos = new HashSet<>();
 
     public Odontologo() {
     }
